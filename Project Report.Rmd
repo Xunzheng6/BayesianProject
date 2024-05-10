@@ -1,10 +1,14 @@
 ---
-title: "Bayesian Project Report"
+title: "Diminishing Self-Prioritization: Enhancing Social Perception through Reverse Matching Training"
 author: "Xunqing Zheng & Chenghao Zhou"
 output: pdf_document
 ---
 
-## Project Proposal
+## Introduction
+In social interactions, individuals often navigate a complex landscape of interpersonal dynamics. Human cognition is inherently biased towards prioritizing one's own interests and viewpoints, potentially hindering the capacity for empathetic and socially attuned behavior. This phenomenon, known as self-prioritization, has significant implications for the quality of interpersonal relationships, cooperation, and societal harmony. Reverse Matching Training targets the underlying biases associated with self-prioritization directly and aims to reorient individuals' cognitive processes towards a more equitable consideration of others' perspectives. 
+
+In this longitudinal cognitive intervention experiment, fourteen participants were divided into two groups based on their task prioritization: match-priority and mismatch-priority. Initially, they learned to link specific shapes—circles and squares—with textual labels, including "自我-self," "他人-other," and two visually similar Chinese characters, 白哉-Bai Zai and 他入-Ta Ru. During the testing phase, participants responded to a visual cue—a fixation cross for 500-800 ms—followed by simultaneous presentation of a shape and text. They had to quickly decide if the combination was a match or mismatch based on their initial training, using specific keys for each condition. The match-priority group was instructed to press one key if the items matched and another if they did not match or if it was a filler item. Conversely, the mismatch-priority group was to press one key for mismatches and another for matches or fillers. This was followed by a 1200 ms blank screen and a 1500 ms relaxation period. The display used was a 1024x768 CRT monitor refreshing at 85Hz. Assessments were made at baseline, across seven training sessions, and during a formal experimental phase. At both baseline and the formal experiment, 64-channel EEG data were recorded at 2000 Hz using the 10-10 system placement.
+## Inital Project Proposal
 
 ## Attribution
 
