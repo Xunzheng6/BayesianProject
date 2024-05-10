@@ -3,7 +3,7 @@ title: "Diminishing Self-Prioritization: Enhancing Social Perception through Rev
 author: "Xunqing Zheng & Chenghao Zhou"
 output: pdf_document
 ---
-
+tess
 ## Introduction
 In social interactions, individuals often navigate a complex landscape of interpersonal dynamics. Human cognition is inherently biased towards prioritizing one's own interests and viewpoints, potentially hindering the capacity for empathetic and socially attuned behavior. This phenomenon, known as self-prioritization, has significant implications for the quality of interpersonal relationships, cooperation, and societal harmony. Reverse Matching Training targets the underlying biases associated with self-prioritization directly and aims to reorient individuals' cognitive processes towards a more equitable consideration of others' perspectives. 
 
