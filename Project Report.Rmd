@@ -24,8 +24,7 @@ Initially, we were thinking about analyzing the data with Bayesian binomial mode
 
 However, after lengthy discussion and examining the available raw data, we decided to focus this analysis project on participant's reaction time and to understand its improvement after training. What's worth calling out is that for the simplicity of this project, we did not include the accuracy in this analysis
 
-\## Packages
-
+## Packages
 ```{r library, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 library(readr)
 library(dplyr)
@@ -50,8 +49,12 @@ RawRT = read_csv("RawRT.csv")
 filtered_data <- RawRT %>%
   mutate(
     meanRT = meanRT * 1000,  # Convert to milliseconds
-    session = factor(session, levels = c(1:9), labels = c("Baseline", 'TR1', 'TR2', 'TR3', 'TR4', 'TR5', 'TR6', 'TR7', "Formal")),
-    group = factor(group, levels = c(1, 2), labels = c("Match First", "Mismatch First")),
+    session = factor(session, levels = c(1:9), labels = c("Baseline", 'TR1', 
+                                                          'TR2', 'TR3', 'TR4', 
+                                                          'TR5', 'TR6', 'TR7', 
+                                                          "Formal")),
+    group = factor(group, levels = c(1, 2), labels = c("Match First", 
+                                                       "Mismatch First")),
     type = case_when(
       conds %in% c(1, 4) ~ "Fill",
       conds %in% c(3, 6) ~ "Match",
@@ -374,8 +377,6 @@ Final_model_stats = Final_model_stats %>%
   select(mean,sd,X10.,X90.,n_eff,Rhat) %>% 
   rename("10%" = "X10.", "90%" = "X90.")
 Final_model_stats
-
-summary(model)
 ```
 
 ## Discussion
