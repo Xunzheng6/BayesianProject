@@ -5,18 +5,10 @@ output: pdf_document
 ---
 
 ## Introduction
-In social interactions, individuals often navigate a complex landscape of interpersonal dynamics.
-Human cognition is inherently biased towards prioritizing one's own interests and viewpoints, potentially hindering the capacity for empathetic and socially attuned behavior.
-This phenomenon, known as self-prioritization, which has significant implications for the quality of interpersonal relationships, cooperation, and societal harmony.
-Reverse Matching Training targets the underlying biases associated with self-prioritization directly and aims to reorient individuals' cognitive processes towards a more equitable consideration of others' perspectives.
 
-In this longitudinal cognitive intervention experiment, fourteen participants were divided into two groups based on their task prioritization: match-priority and mismatch-priority.
-Initially, they learned to link specific shapes - circles and squares - with textual labels, including "self," "other," and two visually similar Chinese characters.
-During the testing phase, participants responded to a visual cue - a fixation cross for 500-800 ms - followed by simultaneous presentation of a shape and text.
-They had to quickly decide if the combination was a match or mismatch based on their initial training, using specific keys for each condition. The match-priority group was instructed to press one key if the items matched and another if they did not match or if it was a filler item.
-Conversely, the mismatch-priority group was to press one key for mismatches and another for matches or fillers.
-This was followed by a 1200 ms blank screen and a 1500 ms relaxation period. The display used was a 1024x768 CRT monitor refreshing at 85Hz.
-Assessments were made at baseline, across seven training sessions, and during a formal experimental phase.
+In social interactions, individuals often navigate a complex landscape of interpersonal dynamics. Human cognition is inherently biased towards prioritizing one's own interests and viewpoints, potentially hindering the capacity for empathetic and socially attuned behavior. This phenomenon, known as self-prioritization, which has significant implications for the quality of interpersonal relationships, cooperation, and societal harmony. Reverse Matching Training targets the underlying biases associated with self-prioritization directly and aims to reorient individuals' cognitive processes towards a more equitable consideration of others' perspectives.
+
+In this longitudinal cognitive intervention experiment, fourteen participants were divided into two groups based on their task prioritization: match-priority and mismatch-priority. Initially, they learned to link specific shapes - circles and squares - with textual labels, including "self," "other," and two visually similar Chinese characters. During the testing phase, participants responded to a visual cue - a fixation cross for 500-800 ms - followed by simultaneous presentation of a shape and text. They had to quickly decide if the combination was a match or mismatch based on their initial training, using specific keys for each condition. The match-priority group was instructed to press one key if the items matched and another if they did not match or if it was a filler item. Conversely, the mismatch-priority group was to press one key for mismatches and another for matches or fillers. This was followed by a 1200 ms blank screen and a 1500 ms relaxation period. The display used was a 1024x768 CRT monitor refreshing at 85Hz. Assessments were made at baseline, across seven training sessions, and during a formal experimental phase.
 
 ## Initial Project Proposal
 
@@ -30,12 +22,12 @@ This project analysis is aiming to understand the data from a Bayesian approach 
 
 Initially, we were thinking about analyzing the data with Bayesian binomial model to estimate the accuracy/reaction time for each group, than apply Bayesian multivariate analysis to correlate EEG data (frequency bands, amplitude, etc.) with task performance (correct/incorrect).
 
-However, after lengthy discussion and examining the available raw data, we decided to focus this analysis project on participant's reaction time and to understand its improvement after training.
-What's worth calling out is that for the simplicity of this project, we did not include the accuracy in this analysis
+However, after lengthy discussion and examining the available raw data, we decided to focus this analysis project on participant's reaction time and to understand its improvement after training. What's worth calling out is that for the simplicity of this project, we did not include the accuracy in this analysis
 
 ## Attribution
 
 ## Packages
+
 ```{r library, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 library(readr)
 library(dplyr)
@@ -47,12 +39,10 @@ library(loo)
 library(rstanarm)
 ```
 
-
 ## Raw Data Summary
-The first step into the analysis is data cleaning, which we first converted the average reaction time from seconds to milliseconds as most of this types of analysis were done in milliseconds.
-In addition to that, we also make sure all the necessary conditions are clearly identified in the data, such as if the specific row is associated with "Fill", "Match", or "Mismatch" experiment session, and if the session is self related or not.
-An intersection condition column is created based on these conditions: 1 = Fill Self, 2 = Mismatch Self, 3 = Match Self, 4 = Fill Non-Self, 5 = Mismatch Non-Self, 6 = Match Non-Self.
-Lastly, we filtered data to only focused on only the reaction time at Baseline and the Formal tests, removing all the training sections in between.
+
+The first step into the analysis is data cleaning, which we first converted the average reaction time from seconds to milliseconds as most of this types of analysis were done in milliseconds. In addition to that, we also make sure all the necessary conditions are clearly identified in the data, such as if the specific row is associated with "Fill", "Match", or "Mismatch" experiment session, and if the session is self related or not. An intersection condition column is created based on these conditions: 1 = Fill Self, 2 = Mismatch Self, 3 = Match Self, 4 = Fill Non-Self, 5 = Mismatch Non-Self, 6 = Match Non-Self. Lastly, we filtered data to only focused on only the reaction time at Baseline and the Formal tests, removing all the training sections in between.
+
 ```{r dataset, echo=TRUE, message=FALSE, warning=FALSE}
 #clean data
 RawRT = read_csv("RawRT.csv")
@@ -81,6 +71,7 @@ filtered_data <- RawRT %>%
 ```
 
 With all data ready, we first take a look at the density distribution of the average reaction time for self-related trials and non-self related trials across the Baseline and Formal experimental sessions. Overall the reaction time data follows roughly a normal distribution with Baseline skewing slightly to the left and formal slightly skewing to the right. We also observed a slightly stronger variations at the Baseline and less variations in distributions during the Formal sessions.
+
 ```{r}
 p = ggplot(filtered_data, aes(x=meanRT, color=ifself_related)) + 
   geom_density() +
@@ -97,6 +88,7 @@ p
 ```
 
 By looking at the box plot for reaction time between "Baseline" and "Formal", interestingly, we observed improvements across all experiment conditions after the training sessions. However, it is still a bit hard to tell if there is a difference in the improvement in reaction times across by self-relatedness.
+
 ```{r Boxplot, echo=TRUE}
 plot_RT <- ggplot(filtered_data, aes(x = type, y = meanRT, fill = ifself_related)) +
   geom_boxplot(outlier.shape = NA) +  # Hide outliers to clean up the plot
@@ -124,6 +116,7 @@ plot_RT
 ```
 
 Before exploring the modeling route, let's take a look at one more plot, taking a look at the relationship between baseline and formal under each experiment conditions. Interestingly, we did not observe a stronger improvement for non-self related reaction time when compared to the self related. For the mismatch first subgroup, we actually observed a longer reaction time after all the trainings.
+
 ```{r message=FALSE, warning=FALSE}
 filtered_data_2 = filtered_data %>% 
   select(-acc_c,-acc_all) %>% 
@@ -139,7 +132,250 @@ p
 ```
 
 ## Prior Predictive Simulation
-To simulate
+
+To better understand and tune the priors for modeling, we conducted some online research. From an article published in 2022, Self-prioritization effect in children and adults by Singh & Karnick, we learned that self reaction time for adult aged 18-22 is round 750ms and 950ms for strangers for matched pairs. For non-matched pairs, the reaction time for the same age group is around 900ms for self and 1000ms for strangers. With this knowledge, a understanding of the data from the descriptive stats in terms of relationship between the Baseline and Formal, we can form our priors for below model.
+
+-   $Y_{i}$\|$\beta_{0}$,$\beta_{1}$,$\beta_{2}$$\sigma$ \~ $N$($\mu_{i}$, $\sigma^{2}$) with $\mu_{i}$=$\beta_{0}$+$\beta_{1}$$conds$+$\beta_{2}$$session$
+-   $\beta_{0}$ \~ $N$($m_{0}$, $s^{2}_{0}$)
+-   $\beta_{1}$ \~ $N$($m_{1}$, $s^{2}_{1}$)
+-   $\sigma$ \~ Exp($l$)
+
+#### Beta Prior Tuning
+
+|  Tuning Trials  | Means | Standard Deviations |   Ranges    |                         Brief Rationales                          |
+|:------------:|:------------:|:------------:|:------------:|:---------------:|
+| Beta0 - Trial 1 |  800  |         90          | (481, 1059) |       A bit smaller from the range observed in density plot       |
+| Beta0 - Trial 2 |  850  |         100         | (510, 1179) | Better range and still reasonable mean based on literature review |
+| Beta1 - Trial 1 |  -1   |          1          |   (-4, 2)   |     We observed difference slopes under difference conditions     |
+
+```{r Prior Tuning, eval=FALSE, include=TRUE}
+#beta prior trials
+beta0_1 = rnorm(1000,800,90)
+range(beta0_1)
+mean(beta0_1)
+
+beta0_2 = rnorm(1000,850,100)
+range(beta0_2)
+mean(beta0_2)
+
+beta1_1 = rnorm(1000,-1,1)
+range(beta1_1)
+mean(beta1_1)
+```
+
+Using the prior we tuned above for prior predictive simulation, we got a very different distribution when compared to collected data. We believe this might be because the simulated data show less variations across different experiment conditions and centered a lot more around the mean.
+
+```{r}
+#fitting the prior model for simulation
+fit_1 = stan_glm(meanRT~conds+session, data = filtered_data,
+                 family = gaussian,
+                 prior_intercept = normal(850, 100),
+                 prior = normal(-1,1),
+                 prior_aux = exponential(1),
+                 chains = 4, iter = 5000, prior_PD = TRUE, refresh = 0)
+
+#getting the parameters for simulation
+RT_model_df = as.data.frame(fit_1)
+first_set = head(RT_model_df, 1)
+beta0 = first_set$`(Intercept)`
+beta1 = first_set$conds
+beta2 = first_set$sessionFormal
+sigma = first_set$sigma
+set.seed(84735)
+
+##Prior Predictive Simulation
+filtered_data = filtered_data %>% 
+  mutate(session1 = as.numeric(ifelse(session=='Baseline',0,1)))
+Prior_Predictive_Simulation = filtered_data %>% 
+  mutate(mu = beta0 + beta1 * conds + beta2 * session1,
+         new_meanRT = rnorm(312, mean = mu, sd = sigma)) %>% 
+  select(conds, meanRT, new_meanRT) %>% 
+  pivot_longer(cols = meanRT:new_meanRT)
+
+p = ggplot(Prior_Predictive_Simulation, aes(x=value, color=name)) + 
+  geom_density() +
+  theme_minimal() +
+  labs(
+    title = "Prior Predictive Simulation  Density Check",
+    x = "Reaction Time (ms)",
+    y = "Frequency",
+  )
+
+p
+
+```
+
+After the first round of tuning, we decided to lower the parameter of $\sigma$ \~ Exp($l$) to get a less concentrated distributions.
+
+```{r}
+#fitting the prior model for simulation
+fit_1 = stan_glm(meanRT~conds+session, data = filtered_data,
+                 family = gaussian,
+                 prior_intercept = normal(850, 100),
+                 prior = normal(-1,1),
+                 prior_aux = exponential(0.00085),
+                 chains = 4, iter = 5000, prior_PD = TRUE, refresh = 0)
+
+#getting the parameters for simulation
+RT_model_df = as.data.frame(fit_1)
+first_set = head(RT_model_df, 1)
+beta0 = first_set$`(Intercept)`
+beta1 = first_set$conds
+beta2 = first_set$sessionFormal
+sigma = first_set$sigma
+set.seed(84735)
+
+##Prior Predictive Simulation
+filtered_data = filtered_data %>% 
+  mutate(session1 = as.numeric(ifelse(session=='Baseline',0,1)))
+Prior_Predictive_Simulation = filtered_data %>% 
+  mutate(mu = beta0 + beta1 * conds + beta2 * session1,
+         new_meanRT = rnorm(312, mean = mu, sd = sigma)) %>% 
+  select(conds, meanRT, new_meanRT) %>% 
+  pivot_longer(cols = meanRT:new_meanRT)
+
+p = ggplot(Prior_Predictive_Simulation, aes(x=value, color=name)) + 
+  geom_density() +
+  theme_minimal() +
+  labs(
+    title = "Prior Predictive Simulation Density Check",
+    x = "Reaction Time (ms)",
+    y = "Frequency",
+  )
+
+p
+```
+
 ## Model Fitting, PPCs, & Model Selection
 
+For model fitting, we are thinking about a couple models including linear regression model and multi-level models. For both model, we think it's reasonable model to fit as the data follows a roughly normal distribution and the multi-level model would allows us to examine data in a more reasonable way according to the data collection process.
+
+#### Linear Model
+
+For this model, we simply follow the same process in our prior predictive simulation and remove the 'prior_PD = TRUE' argument in the code.
+
+```{r}
+set.seed(84735)
+source('prediction_summary.R')
+fit_2 = stan_glm(meanRT~as.factor(conds)+session, data = filtered_data,
+                 family = gaussian,
+                 prior_intercept = normal(850, 100),
+                 prior = normal(-1,1),
+                 prior_aux = exponential(0.00085),
+                 chains = 4, iter = 10000, refresh = 0)
+```
+
+When checking the conducting the posterior predictive checks, we observed that:
+
+-   mae: The median absolute error, 93, measures the typical difference between reaction time and the their posterior predictive reaction time.
+
+-   mae_scaled: The scaled median absolute error, 0.7562155, measures the typical number of standard deviations that the observed reaction time fall from their posterior predictive reaction time.
+
+-   within_50: Roughly 45% of observed reaction time that fall within their 50% posterior prediction interval.
+
+-   within_95: Roughly 96% of observed reaction time that fall within their 95% posterior prediction interval.
+
+```{r}
+pp_check(fit_2)
+linear_stat = prediction_summary(fit_2, data = filtered_data)
+```
+
+For the coefficients, we care about if there is a improvement in non-self related reaction times, therefore, let's take a look at the coefficient for those conditions (4-6). Overall, there is a we observe a negative relationship on reaction time with all else remained constant and compared to the reference category of 'Fill Self'. However, this relationship is not creditable at a 80% interval as the sign changes towards the tail of the distributions for all these coefficients.
+
+| Estimates             | Mean  | SD  | 10%   | 50%   | 90%   |
+|-----------------------|-------|-----|-------|-------|-------|
+| Intercept             | 803   | 7   | 794   | 803   | 812   |
+| 2 = Mismatch Self     | -1.1  | 1   | -2.3  | -1.1  | 0.2   |
+| 3 = Match Self        | -0.9  | 1   | -2.2  | -0.9  | 0.4   |
+| 4 = Fill Non-Self     | -1.1  | 1   | -2.4  | -1.1  | 0.2   |
+| 5 = Mismatch Non-Self | -1    | 1   | -2.3  | -1    | 0.3   |
+| 6 = Match Non-Self    | -0.9  | 1   | -2.2  | -0.9  | 0.4   |
+| Session = Formal      | -1.5  | 1   | -2.8  | -1.5  | -0.3  |
+| Sigma                 | 123.3 | 5   | 117.1 | 123.1 | 129.8 |
+
+```{r eval=FALSE, include=TRUE}
+summary(fit_2)
+```
+
+#### Multi-level Models
+
+For this model, we used the brms package
+
+```{r}
+model = stan_lmer(meanRT~type + ifself_related + group + session + gender + (1|subj), 
+                  data = filtered_data,
+                  prior_intercept = normal(850, 100),
+                  prior = normal(-1,1),
+                  prior_aux = exponential(0.00085),
+                  chains = 4, iter = 10000, refresh = 0)
+
+fit_without_gender = stan_lmer(meanRT~type + ifself_related + group + session + (1|subj), 
+                               data = filtered_data,
+                               prior_intercept = normal(850, 100),
+                               prior = normal(-1,1),
+                               prior_aux = exponential(0.00085),
+                               chains = 4, iter = 10000, refresh = 0)
+
+fit_without_self = stan_lmer(meanRT~type + gender + group + session + (1|subj), 
+                               data = filtered_data,
+                               prior_intercept = normal(850, 100),
+                               prior = normal(-1,1),
+                               prior_aux = exponential(0.00085),
+                               chains = 4, iter = 10000, refresh = 0)
+
+fit_without_gender_self = stan_lmer(meanRT~type + group + session + (1|subj), 
+                               data = filtered_data,
+                               prior_intercept = normal(850, 100),
+                               prior = normal(-1,1),
+                               prior_aux = exponential(0.00085),
+                               chains = 4, iter = 10000, refresh = 0)
+
+```
+
+When comparing the posterior predictive plots, all of the models we fitted with multi-level model did not deviates too much from the linear posterior predictive plots.
+
+```{r}
+par(mfrow=c(2,2))
+pp_check(model)
+pp_check(fit_without_gender)
+pp_check(fit_without_self)
+pp_check(fit_without_gender_self)
+```
+When comparing the mean absolute error across all fitted models, the linear model actually shows higher error then the multilevel models, and less collected data fall within the 95% interval of the posterior linear model.
+```{r}
+all_predictor = prediction_summary(model, data = filtered_data)
+without_gender = prediction_summary(fit_without_gender, data = filtered_data)
+without_self = prediction_summary(fit_without_self, data = filtered_data)
+without_gender_self = prediction_summary(fit_without_gender_self, data = filtered_data)
+table = rbind(linear_stat,all_predictor,without_gender,without_self,without_gender_self)
+rowname = c("Linear", "Multi-level: all_predictor", "Multi-level: without_gender",
+            "Multi-level: without_self","Multi-level: without_gender_self")
+cbind(rowname,table)
+```
+Model Comparisons Using LOO: The elpd_diff values are differences in expected log predictive densities, where higher values indicate better predictive performance:
+
+fit_without_self_gender: Serves as the reference model with an elpd_diff of 0.0, as it is the simplest model being compared. fit_without_gender: Shows a decrease in performance with an elpd_diff of -11.2, suggesting that including gender improves the model. fit_without_self: Further reduction in performance with an elpd_diff of -20.6 indicates that self is also a significant predictor. model_filtered: The full model shows the most significant drop in performance relative to the simplest model (fit_without_self_gender), with an elpd_diff of -58.2, highlighting the combined importance of gender, self, and their interactions with other variables.
+
+```{r}
+loo_linear <- loo(fit_2)
+loo_all <- loo(model)
+loo_without_gender <- loo(fit_without_gender)
+loo_without_self <- loo(fit_without_self)
+loo_without_gender_self <- loo(fit_without_gender_self)
+model_comparison <- loo_compare(loo_linear,loo_all,loo_without_gender,
+                                loo_without_self,loo_without_gender_self)
+```
+
+
+```{r}
+all_predictor <- emmeans(model, pairwise ~ session | ifself_related)
+post_hoc_results$contrasts
+```
+
 ## Discussion
+
+
+
+Discussion of Findings:
+
+The analysis confirms that both gender and ifself_related contribute positively to the model's ability to predict reaction times. Their exclusion leads to poorer model performance, underscoring their relevance in the study context.
