@@ -6,9 +6,19 @@ output: pdf_document
 
 ## Introduction
 
-In social interactions, individuals often navigate a complex landscape of interpersonal dynamics. Human cognition is inherently biased towards prioritizing one's own interests and viewpoints, potentially hindering the capacity for empathetic and socially attuned behavior. This phenomenon, known as self-prioritization, which has significant implications for the quality of interpersonal relationships, cooperation, and societal harmony. Reverse Matching Training targets the underlying biases associated with self-prioritization directly and aims to reorient individuals' cognitive processes towards a more equitable consideration of others' perspectives.
+The understanding of the self is not only a classical philosophical question but also a critical issue in cognitive science(Cunningham & Turk, 2017). Research in cognitive science has found that humans can quickly
+differentiate between self-related and non-self-related information, prioritizing the processing of self-related information. Researchers have explored this by having participants associate neutral stimuli with either themselves or others and then perform a perceptual matching task (Hu et al., 2020; Sui & Humphreys, 2015; Sui & Rotshtein, 2019). They found that stimuli associated with the self, even those learned on the spot, were processed preferentially in perceptual matching tasks. This effect is known as the self-relevance advantage or self-prioritization effect. One challenge in studying self-relevance is distinguishing the effects of self-relevance from those of familiarity. This project seeks to understand the cognitive computational processes that facilitate the self-relevance advantage in immediate association learning perceptual matching tasks based on a 9-session longitudinal cognitive intervention experiment.  
 
-In this longitudinal cognitive intervention experiment, fourteen participants were divided into two groups based on their task prioritization: match-priority and mismatch-priority. Initially, they learned to link specific shapes - circles and squares - with textual labels, including "self," "other," and two visually similar Chinese characters. During the testing phase, participants responded to a visual cue - a fixation cross for 500-800 ms - followed by simultaneous presentation of a shape and text. They had to quickly decide if the combination was a match or mismatch based on their initial training, using specific keys for each condition. The match-priority group was instructed to press one key if the items matched and another if they did not match or if it was a filler item. Conversely, the mismatch-priority group was to press one key for mismatches and another for matches or fillers. This was followed by a 1200 ms blank screen and a 1500 ms relaxation period. The display used was a 1024x768 CRT monitor refreshing at 85Hz. Assessments were made at baseline, across seven training sessions, and during a formal experimental phase.
+In this longitudinal cognitive intervention experiment, fourteen Chinese participants were divided into two
+groups based on their task prioritization: match-priority and mismatch-priority. Initially, they learned to
+link specific shapes - circles and squares - with textual labels, including “self,” “other,” and two visually
+similar Chinese characters. During the testing phase, participants responded to a visual cue - a fixation
+cross for 500-800 ms - followed by simultaneous presentation of a shape and text. They had to quickly
+decide if the combination was a match or mismatch based on their initial training, using specific keys for
+each condition. The match-priority group was instructed to press one key if the items matched and another
+if they did not match or if it was a filler item. Conversely, the mismatch-priority group was to press one key for mismatches and another for matches or fillers. This was followed by a 1200 ms blank screen and a 1500
+ms relaxation period. The display used was a 1024x768 CRT monitor refreshing at 85Hz. Assessments were
+made at baseline, across seven training sessions, and during a formal experimental phase.
 
 ## Initial Project Proposal
 
@@ -405,4 +415,24 @@ Discussion
 
 ## Citation
 
-Singh, D., & Karnick, H. (2022, May 24). Self-prioritization effect in children and adults. Frontiers. <https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.726230/full>
+Singh, D., & Karnick, H. (2022, May 24). Self-prioritization effect in children and adults. Frontiers. <https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.726230/full>  
+
+Singh, D., & Karnick, H. (2022, May 24). Self-prioritization effect in children and adults. Frontiers. https:
+//www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.726230/full
+Cunningham, S. J., & Turk, D. J. (2017). Editorial: A Review of Self-Processing Biases in Cognition.
+Quarterly Journal of Experimental Psychology, 70 (6), 987–995. https://doi.org/10.1080/17470218.2016.
+1276609  
+
+Hu, C.-P., Lan, Y., Macrae, C. N., & Sui, J. (2020). Good Me Bad Me: Prioritization of the Good-Self
+During Perceptual Decision-Making. Collabra: Psychology, 6 (1), 20. https://doi.org/10.1525/collabra.301  
+
+Kable, J. W., & Glimcher, P. W. (2007). The neural correlates of subjective value during intertemporal
+choice. Nature Neuroscience, 10 (12), 1625–1633. https://doi.org/10.1038/nn2007  
+
+Sui, J., & Humphreys, G. W. (2015). The Integrative Self: How Self-Reference Integrates Perception and
+Memory. Trends in Cognitive Sciences, 19 (12), 719–728. https://doi.org/10.1016/j.tics.2015.08.015  
+
+Sui, J., & Rotshtein, P. (2019). Self-prioritization and the attentional systems. Current Opinion in Psychol-
+ogy, 29, 148–152. https://doi.org/10.1016/j.copsyc.2019.02.010  
+
+
