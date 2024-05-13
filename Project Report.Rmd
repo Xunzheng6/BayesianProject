@@ -24,9 +24,7 @@ Initially, we were thinking about analyzing the data with Bayesian binomial mode
 
 However, after lengthy discussion and examining the available raw data, we decided to focus this analysis project on participant's reaction time and to understand its improvement after training. What's worth calling out is that for the simplicity of this project, we did not include the accuracy in this analysis
 
-## Attribution
-
-## Packages
+\## Packages
 
 ```{r library, eval=TRUE, message=FALSE, warning=FALSE, include=TRUE}
 library(readr)
@@ -131,19 +129,19 @@ p = ggplot(filtered_data_2, aes(x=Baseline, y=Formal, color = ifself_related)) +
 p
 ```
 
-## Prior Predictive Simulation
+## Prior Predictive Simulation & Stat. Model
 
 To better understand and tune the priors for modeling, we conducted some online research. From an article published in 2022, Self-prioritization effect in children and adults by Singh & Karnick, we learned that self reaction time for adult aged 18-22 is round 750ms and 950ms for strangers for matched pairs. For non-matched pairs, the reaction time for the same age group is around 900ms for self and 1000ms for strangers. With this knowledge, a understanding of the data from the descriptive stats in terms of relationship between the Baseline and Formal, we can form our priors for below model.
 
 -   $Y_{i}$\|$\beta_{0}$,$\beta_{1}$,$\beta_{2}$$\sigma$ \~ $N$($\mu_{i}$, $\sigma^{2}$) with $\mu_{i}$=$\beta_{0}$+$\beta_{1}$$conds$+$\beta_{2}$$session$
--   $\beta_{0}$ \~ $N$($m_{0}$, $s^{2}_{0}$)
--   $\beta_{1}$ \~ $N$($m_{1}$, $s^{2}_{1}$)
--   $\sigma$ \~ Exp($l$)
+-   $\beta_{0}$ \~ $N$($m_{0}$, $s^{2}_{0}$) - normal distribution as observed in raw data, and we want to set mean round 800 as a result of our literature review
+-   $\beta_{1}$ \~ $N$($m_{1}$, $s^{2}_{1}$) - not sure about distribution but can be positive or negative
+-   $\sigma$ \~ Exp($l$) - non-negative
 
 #### Beta Prior Tuning
 
 |  Tuning Trials  | Means | Standard Deviations |   Ranges    |                         Brief Rationales                          |
-|:------------:|:------------:|:------------:|:------------:|:---------------:|
+|:-------------:|:-------------:|:-------------:|:-------------:|:-------------:|
 | Beta0 - Trial 1 |  800  |         90          | (481, 1059) |       A bit smaller from the range observed in density plot       |
 | Beta0 - Trial 2 |  850  |         100         | (510, 1179) | Better range and still reasonable mean based on literature review |
 | Beta1 - Trial 1 |  -1   |          1          |   (-4, 2)   |     We observed difference slopes under difference conditions     |
@@ -341,7 +339,9 @@ pp_check(fit_without_gender)
 pp_check(fit_without_self)
 pp_check(fit_without_gender_self)
 ```
+
 When comparing the mean absolute error across all fitted models, the linear model actually shows higher error then the multilevel models, and less collected data fall within the 95% interval of the posterior linear model.
+
 ```{r}
 all_predictor = prediction_summary(model, data = filtered_data)
 without_gender = prediction_summary(fit_without_gender, data = filtered_data)
@@ -352,9 +352,8 @@ rowname = c("Linear", "Multi-level: all_predictor", "Multi-level: without_gender
             "Multi-level: without_self","Multi-level: without_gender_self")
 cbind(rowname,table)
 ```
-Model Comparisons Using LOO: The elpd_diff values are differences in expected log predictive densities, where higher values indicate better predictive performance:
 
-fit_without_self_gender: Serves as the reference model with an elpd_diff of 0.0, as it is the simplest model being compared. fit_without_gender: Shows a decrease in performance with an elpd_diff of -11.2, suggesting that including gender improves the model. fit_without_self: Further reduction in performance with an elpd_diff of -20.6 indicates that self is also a significant predictor. model_filtered: The full model shows the most significant drop in performance relative to the simplest model (fit_without_self_gender), with an elpd_diff of -58.2, highlighting the combined importance of gender, self, and their interactions with other variables.
+When comparing the model using LOO, we pay attention to elpd_diff values, which are differences in expected log predictive densities, where higher values indicate better predictive performance. In our case, it is the loo_without_self model. However, since self is an important predictor to our experiment, we actually going to move forward with the one with all predictor variables.
 
 ```{r}
 loo_linear <- loo(fit_2)
@@ -364,18 +363,45 @@ loo_without_self <- loo(fit_without_self)
 loo_without_gender_self <- loo(fit_without_gender_self)
 model_comparison <- loo_compare(loo_linear,loo_all,loo_without_gender,
                                 loo_without_self,loo_without_gender_self)
+model_comparison
 ```
 
+Similar to the linear model, we only observed in significant change in reaction time for Baseline vs Formal. This means that when everything else remained constant, the same individual in Baseline session would show a longer reaction time than the same individual in the formal session. When looking at individual level grouping, we observed inconsistent results across the individual for within effects. This could be due to the limited experiment units within each groups at this level.
 
 ```{r}
-all_predictor <- emmeans(model, pairwise ~ session | ifself_related)
-post_hoc_results$contrasts
+Final_model_stats = data.frame(model$stan_summary)
+Final_model_stats = Final_model_stats %>% 
+  select(mean,sd,X10.,X90.,n_eff,Rhat) %>% 
+  rename("10%" = "X10.", "90%" = "X90.")
+Final_model_stats
+
+summary(model)
 ```
 
 ## Discussion
 
+For this analysis, we were only able to find significant change in reaction time in terms of experiment sessions, Baseline vs Formal. This means that overall training is helpful at reduction reaction times to a prompt regardless if it's "self-related". We can't really prove that if the reverse training help reduce self-prioritization or not as the coefficient for "self vs non-self" is in the consistent direction with in the 80% creditable interval.
 
+Some of the limitations, we faced with this analysis is the limited time. We did not have enough time to think through the data carefully to account for accuracy and reaction time together.
 
-Discussion of Findings:
+## Attribution
 
-The analysis confirms that both gender and ifself_related contribute positively to the model's ability to predict reaction times. Their exclusion leads to poorer model performance, underscoring their relevance in the study context.
+Raw Data Summary
+
+-   Chenghao worked on the data cleaning. We worked together to plot the raw data summary as there were a lot discussion around how we can make sense of the data given the complicated experimental design.
+
+Prior Predictive Simulation
+
+-   Xunqing worked on the prior predictive simulation and tuning of the prior
+
+Modeling Fitting, PPCs, and Model Selection
+
+-   We will both be working on this part of the project, where Chenghao fitted all the multi-level models, key convergence diagnostics, including R hats. Xunqing worked on the linear fit.
+
+Discussion
+
+-   We worked on this part together
+
+## Citation
+
+Singh, D., & Karnick, H. (2022, May 24). Self-prioritization effect in children and adults. Frontiers. <https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.726230/full>
